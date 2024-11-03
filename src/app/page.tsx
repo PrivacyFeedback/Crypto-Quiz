@@ -30,7 +30,8 @@ import contractABI from "../contract/abi.json" assert { type: "json" };
 import contractAddress from "../contract/address.json" assert { type: "json" };
 import { ethers } from "ethers";
 
-const SERVICE_ID = 1;
+if(!process.env.NEXT_PUBLIC_SERVICE_ID) throw new Error("process.env.NEXT_PUBLIC_SERVICE_ID is not defined");
+const SERVICE_ID = process.env.NEXT_PUBLIC_SERVICE_ID;
 
 const questions = [
   {
