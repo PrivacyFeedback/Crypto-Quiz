@@ -11,7 +11,7 @@ if(!process.env.SERVICE_ID) throw new Error("SERVICE_ID is not defined");
 const SERVICE_ID = BigInt(process.env.SERVICE_ID); // Ensure this is set in your environment variables
 
 function getHTMLContent(serviceId: string, userAddress: string) {
-    const magicLink = `http://localhost:3000/feedback/${serviceId}/${userAddress}`;
+    const magicLink = `https://privacy-feedback.vercel.app/feedback/${serviceId}/${userAddress}`;
     
     return `<!DOCTYPE html>
 <html lang="en">
@@ -66,7 +66,7 @@ function getHTMLContent(serviceId: string, userAddress: string) {
 }
 
 function getPlainTextContent(serviceId: string, userAddress: string) {
-    const magicLink = `http://localhost:3000/feedback/${serviceId}/${userAddress}`;
+    const magicLink = `https://privacy-feedback.vercel.app/feedback/${serviceId}/${userAddress}`;
     return `PrivateFeedback Invitation
 
 Hello,
