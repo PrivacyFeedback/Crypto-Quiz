@@ -2,19 +2,24 @@
 	{
 		"inputs": [
 			{
-				"internalType": "address",
-				"name": "_user",
-				"type": "address"
-			},
-			{
 				"internalType": "uint256",
 				"name": "_serviceId",
 				"type": "uint256"
 			},
 			{
-				"internalType": "bytes",
-				"name": "_signature",
-				"type": "bytes"
+				"internalType": "uint8",
+				"name": "_v",
+				"type": "uint8"
+			},
+			{
+				"internalType": "bytes32",
+				"name": "_r",
+				"type": "bytes32"
+			},
+			{
+				"internalType": "bytes32",
+				"name": "_s",
+				"type": "bytes32"
 			}
 		],
 		"name": "registerInteraction",
@@ -65,6 +70,11 @@
 		"type": "function"
 	},
 	{
+		"inputs": [],
+		"stateMutability": "nonpayable",
+		"type": "constructor"
+	},
+	{
 		"anonymous": false,
 		"inputs": [
 			{
@@ -86,19 +96,24 @@
 	{
 		"inputs": [
 			{
-				"internalType": "address",
-				"name": "_user",
-				"type": "address"
-			},
-			{
 				"internalType": "uint256",
 				"name": "_serviceId",
 				"type": "uint256"
 			},
 			{
-				"internalType": "bytes",
-				"name": "_feedbackFillingSignature",
-				"type": "bytes"
+				"internalType": "uint8",
+				"name": "_v",
+				"type": "uint8"
+			},
+			{
+				"internalType": "bytes32",
+				"name": "_r",
+				"type": "bytes32"
+			},
+			{
+				"internalType": "bytes32",
+				"name": "_s",
+				"type": "bytes32"
 			},
 			{
 				"internalType": "uint256",
@@ -124,7 +139,7 @@
 				"type": "uint256"
 			}
 		],
-		"name": "getFeedbackByService",
+		"name": "getAllFeedbacks",
 		"outputs": [
 			{
 				"internalType": "uint256[]",
@@ -133,35 +148,6 @@
 			}
 		],
 		"stateMutability": "view",
-		"type": "function"
-	},
-	{
-		"inputs": [
-			{
-				"internalType": "address",
-				"name": "_user",
-				"type": "address"
-			},
-			{
-				"internalType": "uint256",
-				"name": "_serviceId",
-				"type": "uint256"
-			},
-			{
-				"internalType": "string",
-				"name": "_state",
-				"type": "string"
-			}
-		],
-		"name": "getMessageHash",
-		"outputs": [
-			{
-				"internalType": "bytes32",
-				"name": "",
-				"type": "bytes32"
-			}
-		],
-		"stateMutability": "pure",
 		"type": "function"
 	},
 	{
@@ -191,7 +177,7 @@
 				"type": "uint256"
 			}
 		],
-		"name": "getServiceMetadataByServiceId",
+		"name": "getServiceMetadata",
 		"outputs": [
 			{
 				"internalType": "uint256",
@@ -248,96 +234,29 @@
 	{
 		"inputs": [
 			{
+				"internalType": "address",
+				"name": "_user",
+				"type": "address"
+			},
+			{
+				"internalType": "uint256",
+				"name": "_serviceId",
+				"type": "uint256"
+			},
+			{
+				"internalType": "uint8",
+				"name": "_v",
+				"type": "uint8"
+			},
+			{
 				"internalType": "bytes32",
-				"name": "_ethSignedMessageHash",
+				"name": "_r",
 				"type": "bytes32"
 			},
 			{
-				"internalType": "bytes",
-				"name": "_signature",
-				"type": "bytes"
-			}
-		],
-		"name": "recoverSigner",
-		"outputs": [
-			{
-				"internalType": "address",
-				"name": "",
-				"type": "address"
-			}
-		],
-		"stateMutability": "pure",
-		"type": "function"
-	},
-	{
-		"inputs": [
-			{
-				"internalType": "uint256",
-				"name": "",
-				"type": "uint256"
-			}
-		],
-		"name": "serviceIdToOwner",
-		"outputs": [
-			{
-				"internalType": "address",
-				"name": "",
-				"type": "address"
-			}
-		],
-		"stateMutability": "view",
-		"type": "function"
-	},
-	{
-		"inputs": [
-			{
-				"internalType": "address",
-				"name": "_user",
-				"type": "address"
-			},
-			{
-				"internalType": "uint256",
-				"name": "_serviceId",
-				"type": "uint256"
-			},
-			{
-				"internalType": "string",
-				"name": "_state",
-				"type": "string"
-			},
-			{
-				"internalType": "bytes",
-				"name": "_signature",
-				"type": "bytes"
-			}
-		],
-		"name": "verify",
-		"outputs": [
-			{
-				"internalType": "bool",
-				"name": "",
-				"type": "bool"
-			}
-		],
-		"stateMutability": "pure",
-		"type": "function"
-	},
-	{
-		"inputs": [
-			{
-				"internalType": "address",
-				"name": "_user",
-				"type": "address"
-			},
-			{
-				"internalType": "uint256",
-				"name": "_serviceId",
-				"type": "uint256"
-			},
-			{
-				"internalType": "bytes",
-				"name": "_feedbackFillingSignature",
-				"type": "bytes"
+				"internalType": "bytes32",
+				"name": "_s",
+				"type": "bytes32"
 			}
 		],
 		"name": "verifyFeedbackFilling",

@@ -19,7 +19,7 @@ const geistMono = localFont({
 });
 
 export const metadata: Metadata = {
-  title: "Oasis Company",
+  title: "Crypto Quiz",
   description: "Generated during the Oasis p4w3 Hackathon",
 };
 

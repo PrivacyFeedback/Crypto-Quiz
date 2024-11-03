@@ -1,15 +1,34 @@
-// @ts-nocheck
-'use client'
+"use client";
 
-import { useState, useEffect } from 'react'
-import { motion, AnimatePresence } from 'framer-motion'
-import { Button } from "@/components/ui/button"
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
-import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
-import { Label } from "@/components/ui/label"
-import { Progress } from "@/components/ui/progress"
-import { useAppKitProvider, useAppKitAccount } from "@reown/appkit/react"
-import { Wallet, Trophy, AlertCircle, CheckCircle2 } from 'lucide-react'
+import { useState, useEffect } from "react";
+import { motion, AnimatePresence } from "framer-motion";
+import { Button } from "@/components/ui/button";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
+import { Label } from "@/components/ui/label";
+import { Progress } from "@/components/ui/progress";
+import { useAppKitProvider, useAppKitAccount } from "@reown/appkit/react";
+import {
+  Wallet,
+  Trophy,
+  AlertCircle,
+  CheckCircle2,
+  Activity,
+  MessageSquare,
+} from "lucide-react";
+import { toast } from "react-hot-toast";
+import contractABI from "../contract/abi.json" assert { type: "json" };
+import contractAddress from "../contract/address.json" assert { type: "json" };
+import { ethers } from "ethers";
+
+const SERVICE_ID = 1;
 
 const questions = [
   {
@@ -18,9 +37,9 @@ const questions = [
       "To create cryptocurrencies",
       "To provide a decentralized and transparent ledger",
       "To speed up internet connections",
-      "To replace traditional banking systems"
+      "To replace traditional banking systems",
     ],
-    correctAnswer: 1
+    correctAnswer: 1,
   },
   {
     question: "What does 'HODL' stand for in the crypto community?",
@@ -28,9 +47,9 @@ const questions = [
       "Hold On for Dear Life",
       "Have Only Decentralized Ledgers",
       "Highly Optimized Distributed Ledger",
-      "Hold On, Don't Lose"
+      "Hold On, Don't Lose",
     ],
-    correctAnswer: 0
+    correctAnswer: 0,
   },
   {
     question: "What is a 'smart contract' in blockchain technology?",
@@ -38,9 +57,9 @@ const questions = [
       "A legally binding document",
       "An AI-powered trading bot",
       "Self-executing code on the blockchain",
-      "A type of cryptocurrency wallet"
+      "A type of cryptocurrency wallet",
     ],
-    correctAnswer: 2
+    correctAnswer: 2,
   },
   {
     question: "What is the process of 'mining' in cryptocurrency?",
@@ -48,9 +67,9 @@ const questions = [
       "Extracting digital coins from the internet",
       "Creating new cryptocurrencies",
       "Verifying transactions and adding them to the blockchain",
-      "Hacking into crypto exchanges"
+      "Hacking into crypto exchanges",
     ],
-    correctAnswer: 2
+    correctAnswer: 2,
   },
   {
     question: "What is a 'fork' in blockchain technology?",
@@ -58,143 +77,306 @@ const questions = [
       "A type of cryptocurrency wallet",
       "A split in the blockchain resulting in two separate chains",
       "A method of encrypting transactions",
-      "A tool for analyzing market trends"
+      "A tool for analyzing market trends",
     ],
-    correctAnswer: 1
-  }
-]
+    correctAnswer: 1,
+  },
+];
+
+const domain = {
+  name: "PrivateFeedback",
+  version: "1",
+  chainId: 23295,
+  verifyingContract: contractAddress.address,
+};
+
+const types = {
+  Interaction: [
+    { name: "user", type: "address" },
+    { name: "serviceId", type: "uint256" },
+    { name: "state", type: "uint8" },
+  ],
+};
 
 export default function CryptoQuizGame() {
-  const [step, setStep] = useState(0)
-  const [score, setScore] = useState(0)
-  const [selectedAnswer, setSelectedAnswer] = useState<number | null>(null)
-  const [isCorrect, setIsCorrect] = useState<boolean | null>(null)
-  const [answeredQuestions, setAnsweredQuestions] = useState<boolean[]>(new Array(questions.length).fill(false))
-  const { walletProvider } = useAppKitProvider()
-  const { address, isConnected } = useAppKitAccount()
+  const [step, setStep] = useState(0);
+  const [score, setScore] = useState(0);
+  const [selectedAnswer, setSelectedAnswer] = useState<number | null>(null);
+  const [isCorrect, setIsCorrect] = useState<boolean | null>(null);
+  const [answeredQuestions, setAnsweredQuestions] = useState<boolean[]>(
+    new Array(questions.length).fill(false)
+  );
+  const { walletProvider } = useAppKitProvider();
+  const { address, isConnected } = useAppKitAccount();
 
   useEffect(() => {
     if (isConnected && step === 0) {
-      setStep(1)
+      setStep(1);
     }
-  }, [isConnected])
+  }, [isConnected]);
 
   const handleAnswer = () => {
-    if (selectedAnswer === null) return
+    if (selectedAnswer === null) return;
 
-    const correct = selectedAnswer === questions[step - 1].correctAnswer
-    setIsCorrect(correct)
-    if (correct) setScore(score + 1)
+    const correct = selectedAnswer === questions[step - 1].correctAnswer;
+    setIsCorrect(correct);
+    if (correct) setScore(score + 1);
 
-    // Mark the current question as answered
-    const newAnsweredQuestions = [...answeredQuestions]
-    newAnsweredQuestions[step - 1] = true
-    setAnsweredQuestions(newAnsweredQuestions)
+    const newAnsweredQuestions = [...answeredQuestions];
+    newAnsweredQuestions[step - 1] = true;
+    setAnsweredQuestions(newAnsweredQuestions);
 
     setTimeout(() => {
-      setSelectedAnswer(null)
-      setIsCorrect(null)
+      setSelectedAnswer(null);
+      setIsCorrect(null);
       if (step < questions.length) {
-        setStep(step + 1)
+        setStep(step + 1);
       } else if (newAnsweredQuestions.every(Boolean)) {
-        setStep(questions.length + 1) // Move to results page only if all questions are answered
+        setStep(questions.length + 1);
+        handleQuizComplete();
       }
-    }, 1500)
-  }
+    }, 10);
+  };
 
   const resetQuiz = () => {
-    setStep(1)
-    setScore(0)
-    setSelectedAnswer(null)
-    setIsCorrect(null)
-    setAnsweredQuestions(new Array(questions.length).fill(false))
-  }
+    setStep(1);
+    setScore(0);
+    setSelectedAnswer(null);
+    setIsCorrect(null);
+    setAnsweredQuestions(new Array(questions.length).fill(false));
+  };
+
+  const getContract = async () => {
+    if (!isConnected) {
+      toast.error("Wallet not connected");
+      return null;
+    }
+    try {
+      const ethersProvider = new ethers.BrowserProvider(window.ethereum);
+      const signer = await ethersProvider.getSigner();
+      const contract = new ethers.Contract(
+        contractAddress.address,
+        contractABI,
+        signer
+      );
+      toast.success("Contract fetched successfully");
+      return contract;
+    } catch (error) {
+      toast.error("Failed to connect to the contract");
+      console.error(error);
+      return null;
+    }
+  };
+
+  const signMessage = async () => {
+    try {
+      const ethersProvider = new ethers.BrowserProvider(window.ethereum);
+      const signer = await ethersProvider.getSigner();
+      const contract = await getContract();
+      if (!contract) {
+        toast.error("Failed to connect to the contract");
+        return;
+      }
+
+      const interaction = {
+        user: signer.address,
+        serviceId: SERVICE_ID,
+        state: 1, // RECORDED
+      };
+
+      const SignMessagePromise = toast.promise(
+        (async () => {
+          const signature = await signer.signTypedData(
+            domain,
+            types,
+            interaction
+          );
+          const splitSig = ethers.Signature.from(signature);
+          const tx = await contract.registerInteraction(
+            SERVICE_ID,
+            splitSig.v,
+            splitSig.r,
+            splitSig.s
+          );
+          await tx.wait();
+        })(),
+        {
+          loading: "Registering your interaction...",
+          success: "Interaction registered successfully!",
+          error: "Failed to register interaction",
+        }
+      );
+
+      await SignMessagePromise;
+
+      const SendEmailPromise = toast.promise(
+        (async () => {
+          const response = await fetch("/api/mail", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({ signerAddress: signer.address }), // Corrected this line
+          });
+
+          if (!response.ok) {
+            const errorData = await response.json();
+            throw new Error(errorData.error || "Failed to send invitation");
+          }
+
+          const data = await response.json();
+          return data.message;
+        })(),
+        {
+          loading: "Sending Magic Link to email...",
+          success: "Email sent successfully!",
+          error: (err) => `Error sending mail: ${err.message}`,
+        }
+      );
+
+      await SendEmailPromise;
+
+      toast.success("Check your email for a confirmation message!", {
+        duration: 5000,
+      });
+    } catch (error) {
+      console.error(error);
+      toast.error("An error occurred while processing your interaction");
+    }
+  };
+
+  const handleQuizComplete = () => {
+    toast.success("Quiz completed! Great job!");
+    signMessage();
+  };
 
   return (
-    <div className="flex items-center justify-center min-h-screen bg-gradient-to-br from-purple-500 to-pink-500">
-      <Card className="w-[400px] overflow-hidden">
-        <CardHeader className="bg-gradient-to-r from-blue-600 to-blue-800 text-white">
-          <CardTitle className="text-2xl font-bold">Crypto Quiz</CardTitle>
-          <CardDescription className="text-blue-100">Test your blockchain knowledge</CardDescription>
-        </CardHeader>
-        <CardContent className="p-6">
-          <AnimatePresence mode="wait">
-            {step === 0 && (
-              <motion.div
-                key="connect"
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: -20 }}
-                transition={{ duration: 0.3 }}
-              >
-                <div className="text-center space-y-4">
+    <div className="min-h-screen bg-gradient-to-br from-purple-500 to-pink-500">
+      <header className="bg-black text-white p-4">
+        <div className="container mx-auto flex justify-between items-center">
+          <h1 className="text-2xl font-bold">Crypto Quiz</h1>
+          <div className="flex items-center space-x-2">
+            {isConnected && <w3m-account-button size="sm" />}
+          </div>
+        </div>
+      </header>
+
+      <main className="container mx-auto px-4 py-8 flex flex-col items-center justify-center">
+        <Card className="w-full max-w-[400px] overflow-hidden">
+          <CardHeader className="bg-gradient-to-r from-blue-600 to-blue-800 text-white">
+            <CardTitle className="text-2xl font-bold">Crypto Quiz</CardTitle>
+            <CardDescription className="text-blue-100">
+              Test your blockchain knowledge
+            </CardDescription>
+          </CardHeader>
+          <CardContent className="p-6">
+            <AnimatePresence mode="wait">
+              {step === 0 && (
+                <motion.div
+                  key="connect"
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -20 }}
+                  transition={{ duration: 0.3 }}
+                  className="text-center space-y-4"
+                >
                   <Wallet className="w-16 h-16 mx-auto text-blue-500" />
                   <h2 className="text-xl font-semibold">Connect Your Wallet</h2>
-                  <p className="text-gray-600">Please connect your wallet to start the quiz.</p>
-                  <w3m-button size='md' />
-                </div>
-              </motion.div>
-            )}
+                  <p className="text-gray-600">
+                    Please connect your wallet to start the quiz.
+                  </p>
+                  <div className="flex justify-center">
+                    <w3m-button size="md" />
+                  </div>
+                </motion.div>
+              )}
+              {step > 0 && step <= questions.length && (
+                <motion.div
+                  key={`question-${step}`}
+                  initial={{ opacity: 0, x: 50 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  exit={{ opacity: 0, x: -50 }}
+                  transition={{ duration: 0.3 }}
+                >
+                  <div className="space-y-4">
+                    <Progress
+                      value={(step / questions.length) * 100}
+                      className="w-full"
+                    />
+                    <h2 className="text-xl font-semibold">
+                      {questions[step - 1].question}
+                    </h2>
+                    <RadioGroup
+                      value={selectedAnswer?.toString()}
+                      onValueChange={(value) =>
+                        setSelectedAnswer(parseInt(value))
+                      }
+                    >
+                      {questions[step - 1].options.map((option, index) => (
+                        <div
+                          key={index}
+                          className="flex items-center space-x-2"
+                        >
+                          <RadioGroupItem
+                            value={index.toString()}
+                            id={`option-${index}`}
+                          />
+                          <Label htmlFor={`option-${index}`}>{option}</Label>
+                        </div>
+                      ))}
+                    </RadioGroup>
+                  </div>
+                </motion.div>
+              )}
+              {step === questions.length + 1 && (
+                <motion.div
+                  key="results"
+                  initial={{ opacity: 0, scale: 0.9 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  exit={{ opacity: 0, scale: 1.1 }}
+                  transition={{ duration: 0.3 }}
+                >
+                  <div className="text-center space-y-4">
+                    <Trophy className="w-16 h-16 mx-auto text-yellow-500" />
+                    <h2 className="text-2xl font-bold">Quiz Completed!</h2>
+                    <p className="text-xl">
+                      Your Score: {score} / {questions.length}
+                    </p>
+                    <p className="text-gray-600">
+                      {score === questions.length
+                        ? "Perfect score! You're a crypto expert!"
+                        : score >= questions.length / 2
+                        ? "Great job! You know your stuff."
+                        : "Keep learning! The crypto world is vast."}
+                    </p>
+                  </div>
+                </motion.div>
+              )}
+            </AnimatePresence>
+          </CardContent>
+          <CardFooter className="bg-gray-50">
             {step > 0 && step <= questions.length && (
-              <motion.div
-                key={`question-${step}`}
-                initial={{ opacity: 0, x: 50 }}
-                animate={{ opacity: 1, x: 0 }}
-                exit={{ opacity: 0, x: -50 }}
-                transition={{ duration: 0.3 }}
+              <Button
+                onClick={handleAnswer}
+                disabled={selectedAnswer === null}
+                className="w-full"
               >
-                <div className="space-y-4">
-                  <Progress value={(step / questions.length) * 100} className="w-full" />
-                  <h2 className="text-xl font-semibold">{questions[step - 1].question}</h2>
-                  <RadioGroup value={selectedAnswer?.toString()} onValueChange={(value) => setSelectedAnswer(parseInt(value))}>
-                    {questions[step - 1].options.map((option, index) => (
-                      <div key={index} className="flex items-center space-x-2">
-                        <RadioGroupItem value={index.toString()} id={`option-${index}`} />
-                        <Label htmlFor={`option-${index}`}>{option}</Label>
-                      </div>
-                    ))}
-                  </RadioGroup>
-                </div>
-              </motion.div>
+                {isCorrect === null
+                  ? "Submit Answer"
+                  : isCorrect
+                  ? "Correct!"
+                  : "Incorrect"}
+              </Button>
             )}
             {step === questions.length + 1 && (
-              <motion.div
-                key="results"
-                initial={{ opacity: 0, scale: 0.9 }}
-                animate={{ opacity: 1, scale: 1 }}
-                exit={{ opacity: 0, scale: 1.1 }}
-                transition={{ duration: 0.3 }}
-              >
-                <div className="text-center space-y-4">
-                  <Trophy className="w-16 h-16 mx-auto text-yellow-500" />
-                  <h2 className="text-2xl font-bold">Quiz Completed!</h2>
-                  <p className="text-xl">Your Score: {score} / {questions.length}</p>
-                  <p className="text-gray-600">
-                    {score === questions.length ? "Perfect score! You're a crypto expert!" :
-                     score >= questions.length / 2 ? "Great job! You know your stuff." :
-                     "Keep learning! The crypto world is vast."}
-                  </p>
-                </div>
-              </motion.div>
+              <Button onClick={resetQuiz} className="w-full">
+                Play Again
+              </Button>
             )}
-          </AnimatePresence>
-        </CardContent>
-        <CardFooter className="bg-gray-50">
-          {step > 0 && step <= questions.length && (
-            <Button 
-              onClick={handleAnswer} 
-              disabled={selectedAnswer === null}
-              className="w-full"
-            >
-              {isCorrect === null ? "Submit Answer" :
-               isCorrect ? "Correct!" : "Incorrect"}
-            </Button>
-          )}
-          {step === questions.length + 1 && (
-            <Button onClick={resetQuiz} className="w-full">Play Again</Button>
-          )}
-        </CardFooter>
-      </Card>
+          </CardFooter>
+        </Card>
+      </main>
+
       {isCorrect !== null && (
         <motion.div
           initial={{ opacity: 0, y: 50 }}
@@ -214,7 +396,7 @@ export default function CryptoQuizGame() {
           </div>
         </motion.div>
       )}
-      <div className="fixed top-4 right-4 flex space-x-2">
+      <div className="fixed top-20 right-4 flex space-x-2">
         {answeredQuestions.map((answered, index) => (
           <motion.div
             key={index}
@@ -227,5 +409,5 @@ export default function CryptoQuizGame() {
         ))}
       </div>
     </div>
-  )
+  );
 }
