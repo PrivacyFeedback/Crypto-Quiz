@@ -117,7 +117,7 @@ export default function CryptoQuizGame() {
     if(isConnected){
       window.ethereum = sapphire.wrap(window.ethereum);
     }
-    if(!isConnected && step === 0) {
+    if(isConnected && step === 0) {
       setStep(1);
     }
   }, [isConnected]);
