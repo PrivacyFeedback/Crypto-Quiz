@@ -2,6 +2,11 @@
 # yarn lockfile v1
 
 
+"@adraffy/ens-normalize@1.10.0":
+  version "1.10.0"
+  resolved "https://registry.npmjs.org/@adraffy/ens-normalize/-/ens-normalize-1.10.0.tgz"
+  integrity sha512-nA9XHtlAkYfJxY7bce8DcN7eKxWWCWkU+1GR9d+U6MbNpfwQp8TI7vqOsBsMcHoT4mBu2kypKoSKnghEzOOq5Q==
+
 "@adraffy/ens-normalize@1.10.1":
   version "1.10.1"
   resolved "https://registry.npmjs.org/@adraffy/ens-normalize/-/ens-normalize-1.10.1.tgz"
@@ -1911,6 +1916,26 @@
   dependencies:
     "@nodelib/fs.scandir" "2.1.5"
     fastq "^1.6.0"
+
+"@oasisprotocol/deoxysii@0.0.5":
+  version "0.0.5"
+  resolved "https://registry.npmjs.org/@oasisprotocol/deoxysii/-/deoxysii-0.0.5.tgz"
+  integrity sha512-a6wYPjk8ALDIiQW/971AKOTSTY1qSdld+Y05F44gVZvlb3FOyHfgbIxXm7CZnUG1A+jK49g5SCWYP+V3/Tc75Q==
+  dependencies:
+    bsaes "0.0.2"
+    uint32 "^0.2.1"
+
+"@oasisprotocol/sapphire-paratime@^1.3.2":
+  version "1.3.2"
+  resolved "https://registry.npmjs.org/@oasisprotocol/sapphire-paratime/-/sapphire-paratime-1.3.2.tgz"
+  integrity sha512-98EQ2BrT0942B0VY50PKcJ6xmUAcz71y8OBMizP6oBJIh0+ogw/z3r5z4veJitMXM4zQbh5wOFaS9eOcKWX5FA==
+  dependencies:
+    "@noble/hashes" "1.3.2"
+    "@oasisprotocol/deoxysii" "0.0.5"
+    cborg "1.10.2"
+    ethers "6.10.0"
+    tweetnacl "1.0.3"
+    type-fest "2.19.0"
 
 "@parcel/watcher-linux-x64-glibc@2.4.1":
   version "2.4.1"
@@ -4268,6 +4293,13 @@ bs58@^6.0.0:
   dependencies:
     base-x "^5.0.0"
 
+bsaes@0.0.2:
+  version "0.0.2"
+  resolved "https://registry.npmjs.org/bsaes/-/bsaes-0.0.2.tgz"
+  integrity sha512-iVxJFMOvCUG85sX2UVpZ9IgvH6Jjc5xpd/W8pALvFE7zfCqHkV7hW3M2XZtpg9biPS0K4Eka96bbNNgLohcpgQ==
+  dependencies:
+    uint32 "^0.2.1"
+
 bser@2.1.1:
   version "2.1.1"
   resolved "https://registry.npmjs.org/bser/-/bser-2.1.1.tgz"
@@ -4389,6 +4421,11 @@ canonicalize@^2.0.0:
   version "2.0.0"
   resolved "https://registry.npmjs.org/canonicalize/-/canonicalize-2.0.0.tgz"
   integrity sha512-ulDEYPv7asdKvqahuAY35c1selLdzDwHqugK92hfkzvlDCwXRRelDkR+Er33md/PtnpqHemgkuDPanZ4fiYZ8w==
+
+cborg@1.10.2:
+  version "1.10.2"
+  resolved "https://registry.npmjs.org/cborg/-/cborg-1.10.2.tgz"
+  integrity sha512-b3tFPA9pUr2zCUiCfRd2+wok2/LBSNUMKOuRRok+WlvvAgEt/PlbgPTsZUcwCOs53IJvLgTp0eotwtosE6njug==
 
 "cbw-sdk@npm:@coinbase/wallet-sdk@3.9.3":
   version "3.9.3"
@@ -5404,6 +5441,19 @@ ethers@^6.13.3:
     aes-js "4.0.0-beta.5"
     tslib "2.4.0"
     ws "8.17.1"
+
+ethers@6.10.0:
+  version "6.10.0"
+  resolved "https://registry.npmjs.org/ethers/-/ethers-6.10.0.tgz"
+  integrity sha512-nMNwYHzs6V1FR3Y4cdfxSQmNgZsRj1RiTU25JwvnJLmyzw9z3SKxNc2XKDuiXXo/v9ds5Mp9m6HBabgYQQ26tA==
+  dependencies:
+    "@adraffy/ens-normalize" "1.10.0"
+    "@noble/curves" "1.2.0"
+    "@noble/hashes" "1.3.2"
+    "@types/node" "18.15.13"
+    aes-js "4.0.0-beta.5"
+    tslib "2.4.0"
+    ws "8.5.0"
 
 event-target-shim@^5.0.0, event-target-shim@^5.0.1:
   version "5.0.1"
@@ -9010,7 +9060,7 @@ tslib@2.4.0:
   resolved "https://registry.npmjs.org/tslib/-/tslib-2.4.0.tgz"
   integrity sha512-d6xOpEDfsi2CZVlPQzGeux8XMwLT9hssAsaPYExaQMuYskwb+x1x7J371tWlbBdWHroy99KnVB6qIkUbs5X3UQ==
 
-tweetnacl@^1.0.3, tweetnacl@1.x.x:
+tweetnacl@^1.0.3, tweetnacl@1.0.3, tweetnacl@1.x.x:
   version "1.0.3"
   resolved "https://registry.npmjs.org/tweetnacl/-/tweetnacl-1.0.3.tgz"
   integrity sha512-6rt+RN7aOi1nGMyC4Xa5DdYiukl2UWCbcJft7YhxReBGQD7OAM8Pbxw6YMo4r2diNEA8FEmu32YOn9rhaiE5yw==
@@ -9025,6 +9075,11 @@ type-fest@^0.7.1:
   resolved "https://registry.npmjs.org/type-fest/-/type-fest-0.7.1.tgz"
   integrity sha512-Ne2YiiGN8bmrmJJEuTWTLJR32nh/JdL1+PSicowtNb0WFpn59GK8/lfD61bVtzguz7b3PBt74nxpv/Pw5po5Rg==
 
+type-fest@2.19.0:
+  version "2.19.0"
+  resolved "https://registry.npmjs.org/type-fest/-/type-fest-2.19.0.tgz"
+  integrity sha512-RAH822pAdBgcNMAfWnCBU3CFZcfZ/i1eZjwFU/dsLKumyuuP3niueg2UAukXYF0E2AAoc82ZSSf9J0WQBinzHA==
+
 typescript@^5, typescript@>=4.9.5, typescript@>=5.0.4:
   version "5.6.3"
   resolved "https://registry.npmjs.org/typescript/-/typescript-5.6.3.tgz"
@@ -9034,6 +9089,11 @@ ufo@^1.5.4:
   version "1.5.4"
   resolved "https://registry.npmjs.org/ufo/-/ufo-1.5.4.tgz"
   integrity sha512-UsUk3byDzKd04EyoZ7U4DOlxQaD14JUKQl6/P7wiX4FNvUfm3XL246n9W5AmqwW5RSFJ27NAuM0iLscAOYUiGQ==
+
+uint32@^0.2.1:
+  version "0.2.1"
+  resolved "https://registry.npmjs.org/uint32/-/uint32-0.2.1.tgz"
+  integrity sha512-d3i8kc/4s1CFW5g3FctmF1Bu2GVXGBMTn82JY2BW0ZtTtI8pRx1YWGPCFBwRF4uYVSJ7ua4y+qYEPqS+x+3w7Q==
 
 uint8-varint@^2.0.1:
   version "2.0.4"
@@ -9464,6 +9524,11 @@ ws@8.18.0:
   version "8.18.0"
   resolved "https://registry.npmjs.org/ws/-/ws-8.18.0.tgz"
   integrity sha512-8VbfWfHLbbwu3+N6OKsOMpBdT4kXPDDB9cJk2bJ6mh9ucxdlnNvH1e+roYkKmN9Nxw2yjz7VzeO9oOz2zJ04Pw==
+
+ws@8.5.0:
+  version "8.5.0"
+  resolved "https://registry.npmjs.org/ws/-/ws-8.5.0.tgz"
+  integrity sha512-BWX0SWVgLPzYwF8lTzEy1egjhS4S4OEAHfsO8o65WOVsrnSRGaSiUaa9e0ggGlkMTtBlmOpEXiie9RUcBO86qg==
 
 xmlhttprequest-ssl@~2.1.1:
   version "2.1.1"

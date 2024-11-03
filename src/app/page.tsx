@@ -29,6 +29,7 @@ import { toast } from "react-hot-toast";
 import contractABI from "../contract/abi.json" assert { type: "json" };
 import contractAddress from "../contract/address.json" assert { type: "json" };
 import { ethers } from "ethers";
+import * as sapphire from '@oasisprotocol/sapphire-paratime';
 
 if(!process.env.NEXT_PUBLIC_SERVICE_ID) throw new Error("process.env.NEXT_PUBLIC_SERVICE_ID is not defined");
 const SERVICE_ID = process.env.NEXT_PUBLIC_SERVICE_ID;
@@ -113,7 +114,10 @@ export default function CryptoQuizGame() {
   const { address, isConnected } = useAppKitAccount();
 
   useEffect(() => {
-    if (isConnected && step === 0) {
+    if(isConnected){
+      window.ethereum = sapphire.wrap(window.ethereum);
+    }
+    if(!isConnected && step === 0) {
       setStep(1);
     }
   }, [isConnected]);
