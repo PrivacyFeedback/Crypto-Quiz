@@ -96,7 +96,7 @@ const types = {
   Interaction: [
     { name: "user", type: "address" },
     { name: "serviceId", type: "uint256" },
-    { name: "state", type: "uint8" },
+    { name: "timestamp", type: "uint256" },
   ],
 };
 
@@ -180,10 +180,11 @@ export default function CryptoQuizGame() {
         return;
       }
 
+      const timestamp = Math.floor(Date.now() / 1000);
       const interaction = {
         user: signer.address,
         serviceId: SERVICE_ID,
-        state: 1, // RECORDED
+        timestamp: timestamp
       };
 
       const SignMessagePromise = toast.promise(
@@ -195,10 +196,11 @@ export default function CryptoQuizGame() {
           );
           const splitSig = ethers.Signature.from(signature);
           const tx = await contract.registerInteraction(
-            SERVICE_ID,
+            BigInt(SERVICE_ID),
             splitSig.v,
             splitSig.r,
-            splitSig.s
+            splitSig.s,
+            BigInt(timestamp)
           );
           await tx.wait();
         })(),
@@ -238,9 +240,12 @@ export default function CryptoQuizGame() {
 
       await SendEmailPromise;
 
-      toast.success("Check your email for a confirmation message!", {
+      toast.success("Kindly check your MailChain email for a confirmation message!", {
         duration: 5000,
       });
+
+      window.open("https://app.mailchain.com/inbox", "_blank", 'noopener,noreferrer');
+
     } catch (error) {
       console.error(error);
       toast.error("An error occurred while processing your interaction");

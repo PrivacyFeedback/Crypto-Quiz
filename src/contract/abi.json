@@ -20,6 +20,11 @@
 				"internalType": "bytes32",
 				"name": "_s",
 				"type": "bytes32"
+			},
+			{
+				"internalType": "uint256",
+				"name": "_timestamp",
+				"type": "uint256"
 			}
 		],
 		"name": "registerInteraction",
@@ -114,6 +119,11 @@
 				"internalType": "bytes32",
 				"name": "_s",
 				"type": "bytes32"
+			},
+			{
+				"internalType": "uint256",
+				"name": "_timestamp",
+				"type": "uint256"
 			},
 			{
 				"internalType": "uint256",
@@ -226,45 +236,6 @@
 				"internalType": "uint256",
 				"name": "",
 				"type": "uint256"
-			}
-		],
-		"stateMutability": "view",
-		"type": "function"
-	},
-	{
-		"inputs": [
-			{
-				"internalType": "address",
-				"name": "_user",
-				"type": "address"
-			},
-			{
-				"internalType": "uint256",
-				"name": "_serviceId",
-				"type": "uint256"
-			},
-			{
-				"internalType": "uint8",
-				"name": "_v",
-				"type": "uint8"
-			},
-			{
-				"internalType": "bytes32",
-				"name": "_r",
-				"type": "bytes32"
-			},
-			{
-				"internalType": "bytes32",
-				"name": "_s",
-				"type": "bytes32"
-			}
-		],
-		"name": "verifyFeedbackFilling",
-		"outputs": [
-			{
-				"internalType": "bool",
-				"name": "",
-				"type": "bool"
 			}
 		],
 		"stateMutability": "view",
